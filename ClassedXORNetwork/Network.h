@@ -28,9 +28,22 @@ public:
 		inputDerivativeMatrix = Layers[0]->GetInputDerivativeMatrix();
 	}
 	
-	Matrix* Forward() { for (auto& layer : Layers) layer->Forward(); }
-	Matrix* Backward() { for (auto& layer : Layers) layer->Backward(); }
-	void Update(float scalar) { for (auto& layer : Layers) layer->Update(scalar); }
+	Matrix* Forward()
+	{
+		for (auto& layer : Layers) layer->Forward();
+		return outputMatrix;
+	}
+	
+	Matrix* Backward()
+	{
+		for (auto& layer : Layers) layer->Backward();
+		return inputDerivativeMatrix;
+	}
+	
+	void Update(float scalar)
+	{
+		for (auto& layer : Layers) layer->Update(scalar);
+	}
 
 	Matrix* inputMatrix;
 	Matrix* outputMatrix;

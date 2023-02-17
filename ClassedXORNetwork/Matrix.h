@@ -26,4 +26,9 @@ public:
 	{
 		cpuGenerateUniform(matrix, totalSize, -1.0f, 1.0f);
 	}
+
+	void Zero()
+	{
+		memset(matrix, 0, totalSize * sizeof(float));
+	}
 };
