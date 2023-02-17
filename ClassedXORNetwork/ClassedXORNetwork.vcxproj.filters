@@ -27,7 +27,7 @@
     <ClInclude Include="Layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LinearLayer.h">
+    <ClInclude Include="LeakyReluLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Matrix.h">

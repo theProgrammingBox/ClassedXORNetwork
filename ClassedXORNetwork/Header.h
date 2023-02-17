@@ -51,18 +51,6 @@ void cpuGenerateUniform(float* matrix, uint32_t size, float min = 0, float max =
 		matrix[counter] = GLOBAL::random.Rfloat(min, max);
 }
 
-void cpuLeakyRelu(float* input, float* output, uint32_t size)
-{
-	for (size_t counter = size; counter--;)
-		output[counter] = (((*(int32_t*)(input + counter) & 0x80000000) >> 31) * 0.9f + 0.1f) * input[counter];
-}
-
-void cpuLeakyReluDerivative(float* input, float* gradient, float* output, uint32_t size)
-{
-	for (size_t counter = size; counter--;)
-		output[counter] = (((*(int32_t*)(input + counter) & 0x80000000) >> 31) * 0.9f + 0.1f) * gradient[counter];
-}
-
 void cpuSoftmax(float* input, float* output, uint32_t size)
 {
 	float sum = 0;

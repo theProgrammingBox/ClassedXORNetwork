@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClInclude Include="Header.h" />
     <ClInclude Include="Layer.h" />
-    <ClInclude Include="LinearLayer.h" />
+    <ClInclude Include="LeakyReluLayer.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Random.h" />
