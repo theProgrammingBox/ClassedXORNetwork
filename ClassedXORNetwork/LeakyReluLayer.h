@@ -10,10 +10,50 @@ public:
 		activationMatrix = Matrix(1, outputSize);
 
 		productDerivativeMatrix = Matrix(1, outputSize);
+
+		biasMatrix = Matrix(1, outputSize);
+		biasDerivativeMatrix = Matrix(1, outputSize);
+
+		biasMatrix.Randomize();
 	}
 	
 	~LeakyReluLayer() override
 	{
+		delete[] weightMatrix.matrix;
+		delete[] biasMatrix.matrix;
+		delete[] productMatrix.matrix;
+		delete[] activationMatrix.matrix;
+		
+		delete[] inputDerivativeMatrix.matrix;
+		delete[] weightDerivativeMatrix.matrix;
+		delete[] biasDerivativeMatrix.matrix;
+		delete[] productDerivativeMatrix.matrix;
+	}
+
+	void AssignInputMatrix(Matrix* inputMatrix) override
+	{
+		this->inputMatrix = inputMatrix;
+		inputDerivativeMatrix = Matrix(1, inputMatrix->columns);
+
+		weightMatrix = Matrix(inputMatrix->columns, productMatrix.columns);
+		weightDerivativeMatrix = Matrix(inputMatrix->columns, productMatrix.columns);
+
+		weightMatrix.Randomize();
+	}
+
+	Matrix* GetOutputMatrix() override
+	{
+		return &activationMatrix;
+	}
+
+	void AssignOutputDerivativeMatrix(Matrix* outputDerivativeMatrix) override
+	{
+		activationDerivativeMatrix = outputDerivativeMatrix;
+	}
+
+	Matrix* GetInputDerivativeMatrix() override
+	{
+		return &inputDerivativeMatrix;
 	}
 	
 	void Forward() override
@@ -28,12 +68,12 @@ public:
 			productMatrix.matrix, productMatrix.columns, 0,
 			1);
 		cpuSaxpy(productMatrix.totalSize, &GLOBAL::ONEF, biasMatrix.matrix, 1, productMatrix.matrix, 1);
-		cpuLeakyRelu(productMatrix.matrix, activationMatrix.matrix, productMatrix.totalSize);
+		cpuLeakyRelu(productMatrix.matrix, activationMatrix.matrix, activationMatrix.totalSize);
 	}
 
 	void Backward() override
 	{
-		cpuLeakyReluDerivative(productMatrix.matrix, activationDerivativeMatrix->matrix, productDerivativeMatrix.matrix, activationDerivativeMatrix->totalSize);
+		cpuLeakyReluDerivative(productMatrix.matrix, activationDerivativeMatrix->matrix, productDerivativeMatrix.matrix, productDerivativeMatrix.totalSize);
 		cpuSgemmStridedBatched(
 			true, false,
 			inputDerivativeMatrix.columns, inputDerivativeMatrix.rows, productDerivativeMatrix.columns,
@@ -49,35 +89,16 @@ public:
 			&GLOBAL::ONEF,
 			productDerivativeMatrix.matrix, productDerivativeMatrix.columns, 0,
 			inputMatrix->matrix, inputMatrix->columns, 0,
-			&GLOBAL::ZEROF,
+			&GLOBAL::ONEF,
 			weightDerivativeMatrix.matrix, weightDerivativeMatrix.columns, 0,
 			1);
+		cpuSaxpy(biasDerivativeMatrix.totalSize, &GLOBAL::ONEF, productDerivativeMatrix.matrix, 1, biasDerivativeMatrix.matrix, 1);
 	}
 
 	void Update(float scalar) override
 	{
-		cpuSaxpy(weightDerivativeMatrix.totalSize, &scalar, weightDerivativeMatrix.matrix, 1, weightMatrix.matrix, 1);
-		cpuSaxpy(biasDerivativeMatrix.totalSize, &scalar, biasDerivativeMatrix.matrix, 1, biasMatrix.matrix, 1);
-	}
-
-	void AssignInputMatrix(Matrix* inputMatrix) override
-	{
-		this->inputMatrix = inputMatrix;
-	}
-	
-	Matrix* GetOutputMatrix() override
-	{
-		return &activationMatrix;
-	}
-
-	void AssignOutputDerivativeMatrix(Matrix* outputDerivativeMatrix) override
-	{
-		this->activationDerivativeMatrix = outputDerivativeMatrix;
-	}
-
-	Matrix* GetInputDerivativeMatrix() override
-	{
-		return &inputDerivativeMatrix;
+		cpuSaxpy(weightMatrix.totalSize, &scalar, weightDerivativeMatrix.matrix, 1, weightMatrix.matrix, 1);
+		cpuSaxpy(biasMatrix.totalSize, &scalar, biasDerivativeMatrix.matrix, 1, biasMatrix.matrix, 1);
 	}
 
 private:

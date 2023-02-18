@@ -13,6 +13,26 @@ float invSqrt(float number)
 	return tmp * 0.703952253f * (2.38924456f - number * tmp * tmp);
 }
 
+namespace GLOBAL
+{
+	Random random(Random::MakeSeed());
+	constexpr float ZEROF = 0.0f;
+	constexpr float ONEF = 1.0f;
+	constexpr float TWOF = 2.0f;
+
+	constexpr float LEARNING_RATE = 0.1f;
+	constexpr uint32_t BATCHES = 16;
+	float GRADIENT_SCALAR = LEARNING_RATE * invSqrt(BATCHES);
+	float HALF_GRADIENT_SCALAR = GRADIENT_SCALAR * 0.5f;
+	float SIXTH_GRADIENT_SCALAR = GRADIENT_SCALAR * 0.16666666666666666666666666666667f;
+
+	constexpr uint32_t INPUT = 2;
+	constexpr uint32_t HIDDEN = 8;
+	constexpr uint32_t OUTPUT = 2;
+	constexpr uint32_t ITERATIONS = 1900;
+	constexpr uint32_t AVERAGES = 100;
+}
+
 void cpuSgemmStridedBatched(
 	bool transB, bool transA,
 	int CCols, int CRows, int AColsBRows,
@@ -81,24 +101,4 @@ void PrintMatrix(float* arr, uint32_t rows, uint32_t cols, const char* label) {
 		printf("\n");
 	}
 	printf("\n");
-}
-
-namespace GLOBAL
-{
-	Random random(Random::MakeSeed());
-	constexpr float ZEROF = 0.0f;
-	constexpr float ONEF = 1.0f;
-	constexpr float TWOF = 2.0f;
-
-	constexpr float LEARNING_RATE = 0.1f;
-	constexpr uint32_t BATCHES = 16;
-	float GRADIENT_SCALAR = LEARNING_RATE * invSqrt(BATCHES);
-	float HALF_GRADIENT_SCALAR = GRADIENT_SCALAR * 0.5f;
-	float SIXTH_GRADIENT_SCALAR = GRADIENT_SCALAR * 0.16666666666666666666666666666667f;
-
-	constexpr uint32_t INPUT = 2;
-	constexpr uint32_t HIDDEN = 8;
-	constexpr uint32_t OUTPUT = 2;
-	constexpr uint32_t ITERATIONS = 1900;
-	constexpr uint32_t AVERAGES = 100;
 }

@@ -17,11 +17,6 @@ public:
 		matrix = new float[totalSize];
 	}
 
-	~Matrix()
-	{
-		delete[] matrix;
-	}
-
 	void Randomize()
 	{
 		cpuGenerateUniform(matrix, totalSize, -1.0f, 1.0f);
