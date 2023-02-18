@@ -7,11 +7,7 @@ public:
 	vector<Layer*> Layers;
 
 	Network() {}
-	~Network()
-	{
-		for (auto& layer : Layers)
-			delete layer;
-	}
+	~Network() {}
 	
 	void AddLayer(Layer* layer)
 	{

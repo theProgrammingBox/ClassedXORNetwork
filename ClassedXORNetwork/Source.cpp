@@ -21,6 +21,9 @@ int main()
 	outputMatrix = network.Forward();
 	
 	PrintMatrix(inputMatrix.matrix, inputMatrix.rows, inputMatrix.columns, "Input Matrix");
+	PrintMatrix(outputMatrix->matrix, outputMatrix->rows, outputMatrix->columns, "Output Matrix");/**/
+
+	//out
 	
 	delete[] inputMatrix.matrix;
 	delete[] outputDerivativeMatrix.matrix;
