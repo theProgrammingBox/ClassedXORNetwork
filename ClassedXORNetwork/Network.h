@@ -21,8 +21,16 @@ public:
 		{
 			Layers[i]->AssignOutputDerivativeMatrix(Layers[i + 1]->GetInputDerivativeMatrix());
 			Layers[i + 1]->AssignInputMatrix(Layers[i]->GetOutputMatrix());
+			Layers[i + 1]->Reset();
 		}
 		Layers[0]->AssignInputMatrix(inputMatrix);
+		Layers[0]->Reset();
+	}
+
+	void Print()
+	{
+		for (auto& layer : Layers)
+			layer->Print();
 	}
 	
 	Matrix* Forward()

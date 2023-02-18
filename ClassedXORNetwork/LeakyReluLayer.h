@@ -55,6 +55,29 @@ public:
 	{
 		return &inputDerivativeMatrix;
 	}
+
+	void Print() override
+	{
+		PrintMatrix(inputMatrix->matrix, inputMatrix->rows, inputMatrix->columns, "inputMatrix");
+		PrintMatrix(weightMatrix.matrix, weightMatrix.rows, weightMatrix.columns, "weightMatrix");
+		PrintMatrix(biasMatrix.matrix, biasMatrix.rows, biasMatrix.columns, "biasMatrix");
+		PrintMatrix(productMatrix.matrix, productMatrix.rows, productMatrix.columns, "productMatrix");
+		PrintMatrix(activationMatrix.matrix, activationMatrix.rows, activationMatrix.columns, "activationMatrix");
+
+		PrintMatrix(inputDerivativeMatrix.matrix, inputDerivativeMatrix.rows, inputDerivativeMatrix.columns, "inputDerivativeMatrix");
+		PrintMatrix(weightDerivativeMatrix.matrix, weightDerivativeMatrix.rows, weightDerivativeMatrix.columns, "weightDerivativeMatrix");
+		PrintMatrix(biasDerivativeMatrix.matrix, biasDerivativeMatrix.rows, biasDerivativeMatrix.columns, "biasDerivativeMatrix");
+		PrintMatrix(productDerivativeMatrix.matrix, productDerivativeMatrix.rows, productDerivativeMatrix.columns, "productDerivativeMatrix");
+		PrintMatrix(activationDerivativeMatrix->matrix, activationDerivativeMatrix->rows, activationDerivativeMatrix->columns, "activationDerivativeMatrix");
+	}
+
+	void Reset() override
+	{
+		inputDerivativeMatrix.Zero();
+		weightDerivativeMatrix.Zero();
+		biasDerivativeMatrix.Zero();
+		productDerivativeMatrix.Zero();
+	}
 	
 	void Forward() override
 	{
@@ -99,6 +122,7 @@ public:
 	{
 		cpuSaxpy(weightMatrix.totalSize, &scalar, weightDerivativeMatrix.matrix, 1, weightMatrix.matrix, 1);
 		cpuSaxpy(biasMatrix.totalSize, &scalar, biasDerivativeMatrix.matrix, 1, biasMatrix.matrix, 1);
+		Reset();
 	}
 
 private:

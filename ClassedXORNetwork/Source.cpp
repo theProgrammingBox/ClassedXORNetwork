@@ -10,20 +10,28 @@ int main()
 	Matrix outputDerivativeMatrix(1, 1);
 	Matrix* inputDerivativeMatrix;
 
-	LeakyReluLayer leakyReluLayer(2);
+	LeakyReluLayer leakyReluLayer(1);
 
 	network.AddLayer(&leakyReluLayer);
 	network.Initialize(&inputMatrix, &outputDerivativeMatrix);
 
-	for (uint32_t i = inputMatrix.totalSize; i--;)
-		inputMatrix.matrix[i] = i;
+	for (uint32_t i = 100; i--;)
+	{
+		inputMatrix.matrix[0] = 0.0f;
+		inputMatrix.matrix[1] = 1.0f;
 
-	outputMatrix = network.Forward();
-	
-	PrintMatrix(inputMatrix.matrix, inputMatrix.rows, inputMatrix.columns, "Input Matrix");
-	PrintMatrix(outputMatrix->matrix, outputMatrix->rows, outputMatrix->columns, "Output Matrix");/**/
+		outputMatrix = network.Forward();
 
-	//out
+		outputDerivativeMatrix.matrix[0] = 0.5f - outputMatrix->matrix[0];
+
+		inputDerivativeMatrix = network.Backward();
+
+		//network.Print();
+		
+		PrintMatrix(outputMatrix->matrix, outputMatrix->rows, outputMatrix->columns, "Output Matrix");
+
+		network.Update(3.0f);
+	}
 	
 	delete[] inputMatrix.matrix;
 	delete[] outputDerivativeMatrix.matrix;
